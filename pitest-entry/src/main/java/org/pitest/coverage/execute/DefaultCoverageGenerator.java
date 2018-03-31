@@ -92,7 +92,8 @@ public class DefaultCoverageGenerator implements CoverageGenerator {
 
       LOG.info("Calculated coverage in " + time + " seconds.");
 
-      verifyBuildSuitableForMutationTesting(coverage);
+      //Commented out this line to allow mutation testing for projects with failures
+//      verifyBuildSuitableForMutationTesting(coverage);
 
       this.exporter.recordCoverage(coverage.createCoverage());
 
