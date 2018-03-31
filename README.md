@@ -1,5 +1,5 @@
 # pit_project
-PIT mutation testing system new operators
+PIT mutation testing configured for debugging projects that have test fails
 
 New operators added:
   1. AOD: Replaces an arithmetic expression by each one of the operand, e.g., a + b -> a and a + b -> b.
