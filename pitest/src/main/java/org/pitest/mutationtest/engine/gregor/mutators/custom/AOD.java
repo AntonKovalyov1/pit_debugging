@@ -81,8 +81,8 @@ abstract class OperandMethodVisitor extends MethodVisitor {
     final MethodMutatorFactory factory;
     
     public OperandMethodVisitor(final MethodMutatorFactory factory,
-                                      final MutationContext context,
-                                      final MethodVisitor writer) {
+                                final MutationContext context,
+                                final MethodVisitor writer) {
         super(Opcodes.ASM6, writer);
         this.context = context;
         this.factory = factory;
