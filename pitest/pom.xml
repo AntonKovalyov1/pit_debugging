@@ -249,6 +249,12 @@
             <version>1.4.8</version>
             <scope>test</scope>
 		</dependency>
+	 <dependency>
+	  <groupId>org.pitest</groupId>
+	  <artifactId>pitest-maven</artifactId>
+	  <version>1.4.0-SNAPSHOT</version>
+	  <type>jar</type>
+	 </dependency>
 	</dependencies>
 
 </project>

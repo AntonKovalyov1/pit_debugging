@@ -53,17 +53,17 @@ public enum M1 implements MethodMutatorFactory {
     
     class NullPointerFieldDereferenceVisitor extends MethodVisitor {
         
-        final MutationContext context;
-        final MethodMutatorFactory factory;
-        
-        public NullPointerFieldDereferenceVisitor(
-                final MethodMutatorFactory factory,
-                final MutationContext context,
-                final MethodVisitor writer) {
-            super(Opcodes.ASM6, writer);
-            this.factory = factory;
-            this.context = context;
-        }
+    final MutationContext context;
+    final MethodMutatorFactory factory;
+
+    public NullPointerFieldDereferenceVisitor(
+            final MethodMutatorFactory factory,
+            final MutationContext context,
+            final MethodVisitor writer) {
+        super(Opcodes.ASM6, writer);
+        this.factory = factory;
+        this.context = context;
+    }
         
     @Override
     public void visitFieldInsn(int opcode, 
@@ -90,7 +90,7 @@ public enum M1 implements MethodMutatorFactory {
         return this.context.shouldMutate(newId);
     }
 
-    public void mutateGetFieldInsn(final int opcode, 
+    private void mutateGetFieldInsn(final int opcode, 
                                    final String owner, 
                                    final String name, 
                                    final String desc) {

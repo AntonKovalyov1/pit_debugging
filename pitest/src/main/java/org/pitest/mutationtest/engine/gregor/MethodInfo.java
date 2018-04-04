@@ -50,16 +50,16 @@ public class MethodInfo {
 
   @Override
   public String toString() {
-    return "MethodInfo [access=" + this.access + ", desc="
+    return "MethodInfo [access=" + this.getAccess() + ", desc="
         + this.methodDescriptor + ",  name=" + this.methodName + "]";
   }
 
   public boolean isStatic() {
-    return ((this.access & Opcodes.ACC_STATIC) != 0);
+    return ((this.getAccess() & Opcodes.ACC_STATIC) != 0);
   }
 
   public boolean isSynthetic() {
-    return ((this.access & Opcodes.ACC_SYNTHETIC) != 0);
+    return ((this.getAccess() & Opcodes.ACC_SYNTHETIC) != 0);
   }
 
   public boolean isConstructor() {
@@ -110,7 +110,7 @@ public class MethodInfo {
   }
 
   public MethodInfo withMethodDescriptor(final String newDescriptor) {
-    return new MethodInfo(this.owningClass, this.access, this.methodName,
+    return new MethodInfo(this.owningClass, this.getAccess(), this.methodName,
         newDescriptor);
   }
 
@@ -120,13 +120,19 @@ public class MethodInfo {
   }
 
   public MethodInfo withMethodName(final String newMethodName) {
-    return new MethodInfo(this.owningClass, this.access, newMethodName,
+    return new MethodInfo(this.owningClass, this.getAccess(), newMethodName,
         this.methodDescriptor);
   }
 
   public MethodInfo withOwner(final ClassInfo newOwnerClass) {
-    return new MethodInfo(newOwnerClass, this.access, this.methodName,
+    return new MethodInfo(newOwnerClass, this.getAccess(), this.methodName,
         this.methodDescriptor);
   }
 
+    /**
+     * @return the access
+     */
+    public int getAccess() {
+        return access;
+    }
 }
