@@ -33,7 +33,7 @@ import org.pitest.mutationtest.engine.gregor.MethodInfo;
 import org.pitest.mutationtest.engine.gregor.MethodMutatorFactory;
 import org.pitest.mutationtest.engine.gregor.MutationContext;
 /**
- * Mutates method invocations by other method invocations with the same name, 
+ * Mutates method invocations by other method invocations with the same name and 
  * same return type but different arguments. If the new arguments size is 
  * greater than the old one, replace new arguments with default values. If the 
  * new arguments size is less than the old one, use a subset of the old 
@@ -142,15 +142,13 @@ class OverloadedMethodVisitor extends MethodVisitor {
         //check in cache
         ArrayList<MethodInfo> overloaded = CACHED_METHODS.get(owner);
         if (overloaded != null) {
-            return filterOverloaded(desc, overloaded);
+            return filterOverloaded(name, desc, overloaded);
         }
         ClassReader cr;
         try {
             cr = new ClassReader(owner);
             return findOverloaded(owner, name, desc, cr);
-        } catch (IOException ex) {
-
-        }
+        } catch (IOException ex) { }
         try {
             FileInputStream fis = new FileInputStream(new File(
                     "./target/classes/" + owner + ".class"));
@@ -167,16 +165,16 @@ class OverloadedMethodVisitor extends MethodVisitor {
                                                  final String name,
                                                  final String desc,
                                                  final ClassReader cr) {
-        ClassMethodsTracker omt = new ClassMethodsTracker(name);
-        cr.accept(omt, 0);
-        cache(owner, omt.methods);
-        return filterOverloaded(desc, omt.methods);        
+        ClassMethodsTracker cmt = new ClassMethodsTracker(name);
+        cr.accept(cmt, 0);
+        cache(owner, cmt.methods);
+        return filterOverloaded(name, desc, cmt.methods);        
     }
     
-    private ArrayList<MethodInfo> filterOverloaded(final String desc,
-            final ArrayList<MethodInfo> overloaded) {
+    private ArrayList<MethodInfo> filterOverloaded(final String name, 
+            final String desc, final ArrayList<MethodInfo> overloaded) {
         ArrayList<MethodInfo> filtered = new ArrayList<>();
-        MethodInfo invoked = findCurrentlyInvokedMethod(desc, overloaded);
+        MethodInfo invoked = findCurrentlyInvokedMethod(name, desc, overloaded);
         Type[] oldArgTypes = Type.getArgumentTypes(desc);
         for (MethodInfo curr : overloaded) {
             Type[] newArgTypes = Type.getArgumentTypes(
@@ -192,10 +190,11 @@ class OverloadedMethodVisitor extends MethodVisitor {
         return filtered;
     }
         
-    private MethodInfo findCurrentlyInvokedMethod(final String desc,
-            final ArrayList<MethodInfo> overloaded) {
+    private MethodInfo findCurrentlyInvokedMethod(final String name, 
+                final String desc, final ArrayList<MethodInfo> overloaded) {
         for (MethodInfo curr : overloaded) {
-            if (desc.equals(curr.getMethodDescriptor())) {
+            if (name.equals(curr.getName()) 
+                    && desc.equals(curr.getMethodDescriptor())) {
                 return curr;
             }
         }
