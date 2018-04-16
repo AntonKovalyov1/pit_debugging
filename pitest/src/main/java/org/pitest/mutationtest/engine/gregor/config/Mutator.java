@@ -69,6 +69,7 @@ public final class Mutator {
         /**
          * ROR mutators
          */
+
         addGroup("ROR", rorMutators());
         
         /**
@@ -90,6 +91,12 @@ public final class Mutator {
          * M2 mutator
          */
         addGroup("M2", M2.makeMutators());
+        
+        /**
+        *M3 mutator
+        */
+        addGroup("M3",M3.makeMutators());
+        
         
         /**
          * Default mutator that inverts the negation of integer and floating
