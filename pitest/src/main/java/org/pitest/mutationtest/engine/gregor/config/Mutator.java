@@ -53,6 +53,7 @@ import org.pitest.mutationtest.engine.gregor.mutators.custom.AOD;
 import org.pitest.mutationtest.engine.gregor.mutators.custom.AOR;
 import org.pitest.mutationtest.engine.gregor.mutators.custom.M1;
 import org.pitest.mutationtest.engine.gregor.mutators.custom.M2;
+import org.pitest.mutationtest.engine.gregor.mutators.custom.M3;
 import org.pitest.mutationtest.engine.gregor.mutators.custom.ROR;
 import org.pitest.mutationtest.engine.gregor.mutators.experimental.NakedReceiverMutator;
 import org.pitest.mutationtest.engine.gregor.mutators.experimental.RemoveIncrementsMutator;
@@ -91,6 +92,10 @@ public final class Mutator {
          */
         addGroup("M2", M2.makeMutators());
         
+        /**
+         * M3 mutator
+         */
+        addGroup("M3", M3.makeMutators());
         /**
          * Default mutator that inverts the negation of integer and floating
          * point numbers.
@@ -329,7 +334,8 @@ public final class Mutator {
         return combine(aodMutators(), 
                combine(rorMutators(), 
                combine(aorMutators(), 
-               combine(group(M1.NULL_POINTER_DEREFERENCE_MUTATOR), 
-                       group(M2.makeMutators())))));
+               combine(group(M1.NULL_POINTER_DEREFERENCE_MUTATOR),
+               combine(group(M2.makeMutators()),
+                       group(M3.makeMutators()))))));
     }
 }
