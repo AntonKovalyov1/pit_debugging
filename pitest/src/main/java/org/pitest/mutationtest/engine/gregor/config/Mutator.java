@@ -53,6 +53,7 @@ import org.pitest.mutationtest.engine.gregor.mutators.custom.AOD;
 import org.pitest.mutationtest.engine.gregor.mutators.custom.AOR;
 import org.pitest.mutationtest.engine.gregor.mutators.custom.M1;
 import org.pitest.mutationtest.engine.gregor.mutators.custom.M2;
+import org.pitest.mutationtest.engine.gregor.mutators.custom.M4;
 import org.pitest.mutationtest.engine.gregor.mutators.custom.ROR;
 import org.pitest.mutationtest.engine.gregor.mutators.experimental.NakedReceiverMutator;
 import org.pitest.mutationtest.engine.gregor.mutators.experimental.RemoveIncrementsMutator;
@@ -64,33 +65,41 @@ public final class Mutator {
     private static final Map<String, Iterable<MethodMutatorFactory>> MUTATORS = new LinkedHashMap<>();
 
     static {
+        /**
+         * 
+         */
         addGroup("CUSTOM", custom());
-        
+
         /**
          * ROR mutators
          */
         addGroup("ROR", rorMutators());
-        
+
         /**
          * AOD mutators
          */
         addGroup("AOD", aodMutators());
-        
+
         /**
          * AOR mutators
          */
         addGroup("AOR", aorMutators());
-        
+
         /**
          * M1 mutator
          */
         add("M1", M1.NULL_POINTER_DEREFERENCE_MUTATOR);
-        
+
         /**
-         * M2 mutator
+         * M2 mutator up to 5
          */
         addGroup("M2", M2.makeMutators());
-        
+
+        /**
+         * M4 mutator up to 100
+         */
+        addGroup("M4", M4.makeMutators());
+
         /**
          * Default mutator that inverts the negation of integer and floating
          * point numbers.
@@ -227,8 +236,8 @@ public final class Mutator {
 
     /**
      * Default set of mutators - designed to provide balance between strength
-     * and performance
-     * Custom mutators added
+     * and performance Custom mutators added
+     * @return a collection
      */
     public static Collection<MethodMutatorFactory> defaults() {
         return group(InvertNegsMutator.INVERT_NEGS_MUTATOR,
@@ -242,6 +251,7 @@ public final class Mutator {
     /**
      * Proposed new defaults - replaced the RETURN_VALS mutator with the new
      * more stable set
+     * @return a collection
      */
     public static Collection<MethodMutatorFactory> newDefaults() {
         return combine(group(InvertNegsMutator.INVERT_NEGS_MUTATOR,
@@ -301,35 +311,36 @@ public final class Mutator {
             return i;
         };
     }
-    
+
     private static Collection<MethodMutatorFactory> aodMutators() {
         return group(AOD.FIRST_OPERAND_MUTATOR, AOD.SECOND_OPERAND_MUTATOR);
     }
-    
+
     private static Collection<MethodMutatorFactory> rorMutators() {
-        return group(ROR.EQUALS_MUTATOR, ROR.GREATER_THAN_MUTATOR, 
-                ROR.GREATER_THAN_OR_EQUALS_MUTATOR, ROR.LESS_THAN_MUTATOR, 
+        return group(ROR.EQUALS_MUTATOR, ROR.GREATER_THAN_MUTATOR,
+                ROR.GREATER_THAN_OR_EQUALS_MUTATOR, ROR.LESS_THAN_MUTATOR,
                 ROR.LESS_THAN_OR_EQUALS_MUTATOR, ROR.NOT_EQUALS_MUTATOR);
     }
-    
+
     private static Collection<MethodMutatorFactory> aorMutators() {
-        return group(AOR.ADDITION_MUTATOR, AOR.DIVISION_MUTATOR, 
-                AOR.MODULUS_MUTATOR, AOR.MULTIPLICATION_MUTATOR, 
+        return group(AOR.ADDITION_MUTATOR, AOR.DIVISION_MUTATOR,
+                AOR.MODULUS_MUTATOR, AOR.MULTIPLICATION_MUTATOR,
                 AOR.SUBTRACTION_MUTATOR);
     }
-    
+
     private static Collection<MethodMutatorFactory> group(
             Iterable<MethodMutatorFactory> mutators) {
         List<MethodMutatorFactory> list = new ArrayList<>();
         mutators.forEach(list::add);
         return list;
     }
-    
+
     private static Collection<MethodMutatorFactory> custom() {
-        return combine(aodMutators(), 
-               combine(rorMutators(), 
-               combine(aorMutators(), 
-               combine(group(M1.NULL_POINTER_DEREFERENCE_MUTATOR), 
-                       group(M2.makeMutators())))));
+        return combine(aodMutators(),
+                combine(rorMutators(),
+                combine(aorMutators(),
+                combine(group(M1.NULL_POINTER_DEREFERENCE_MUTATOR),
+                combine(group(M2.makeMutators()),               
+                        group(M4.makeMutators()))))));
     }
 }
