@@ -102,7 +102,7 @@ class OverloadedMethodVisitor extends MethodVisitor {
     //use cache to save visited classes methods for reuse
     static final Map<String, ArrayList<MethodInfo>> CACHED_METHODS = 
             new HashMap<>();
-    static final int MAX_CACHE_SIZE = 100;
+    static final int MAX_CACHE_SIZE = 1000;
     
     final MutationContext context;
     final MethodMutatorFactory factory;
@@ -175,6 +175,9 @@ class OverloadedMethodVisitor extends MethodVisitor {
             final String desc, final ArrayList<MethodInfo> overloaded) {
         ArrayList<MethodInfo> filtered = new ArrayList<>();
         MethodInfo invoked = findCurrentlyInvokedMethod(name, desc, overloaded);
+        if (invoked == null) {
+            return new ArrayList<>();
+        }
         Type[] oldArgTypes = Type.getArgumentTypes(desc);
         for (MethodInfo curr : overloaded) {
             Type[] newArgTypes = Type.getArgumentTypes(
@@ -292,8 +295,9 @@ class OverloadedMethodVisitor extends MethodVisitor {
         if (CACHED_METHODS.containsKey(owner) || classMethods == null) {
             return;
         }
-        if (CACHED_METHODS.size() + classMethods.size() > MAX_CACHE_SIZE) {
+        if (CACHED_METHODS.size() + 1 > MAX_CACHE_SIZE) {
             CACHED_METHODS.clear();
+            CACHED_METHODS.put(owner, classMethods);
         }
         CACHED_METHODS.put(owner, classMethods);
     }
